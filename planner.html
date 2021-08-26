@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Planner</title>
+
+  <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAE1SURBVHgB7ZdBDoIwEEWn6IJluQFLj+MNjCdQT6BbV8YTyA30RnID2LrCmRiVNMAMdLQs+IlJJe28z0wZigGhkiSpoIeKojCSeREE1txauzHGHHBsmyZI76RNHZnLq6o6RwjftsF/rBTZeypBCuFkw+8B94Jvzbl47p4YXwbapJ2Zt4JnYDKgbgA76wp3eoG/O46X3HxVAwTH7pbBq7NSp7twa9QM1OB1ldw6FQMtcMCXzY5byxqgOnbVtAO+LsvyxsVnDWDwE3xreiWgEJ6BQJJOaB1DGYI/Y/CAk9gMNNWRwBpwkQEKSIG5eUPgIgMSE0PhYgNdJnzgvQw4JnL66wsnGfeEIn3v45NgEc52OldqJ6Ih8CZN5wHT95tPW6MogcpmGqh8FsfxA/v6Av7/fUh95PgEIROb9L5bVT0AAAAASUVORK5CYII=">
+
+  <style>
+
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  :root {
+    --color-background: #fff;
+    --color-day-background:  rgba(0,0,0, .075);
+    --color-day-border: var(--color-background);
+    --color-day-text: #000;
+    --color-focus: rgba(34, 144, 255, .5);
+    --color-today-background: rgba(253, 226, 144, 1);
+    --color-today-border: rgba(255,255,255, .5);
+    --color-today-text: #000;
+  }
+
+  body {
+    font-family: sans-serif;
+    display: flex;
+    height: 100vh;
+    line-height: 1;
+    font-size: 1rem;
+    background: var(--color-background);
+  }
+
+  .plan {
+    padding: 1rem;
+    display: grid;
+    grid-template-columns: repeat(20, 1fr);
+    grid-template-rows: 40px 66% 1fr;
+    grid-gap: .5rem;
+    flex-basis: 100%;
+  }
+
+  .heading {
+    padding-bottom: .5rem;
+    border-bottom: 1px solid var(--color-day-border);
+    font-weight: 400;
+    padding: .5rem;
+    display: flex;
+    justify-content: space-between;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: .05em;
+  }
+
+  .notes {
+    background: var(--color-day-background);
+    display: flex;
+    flex-direction: column;
+    color: var(--color-day-text);
+  }
+
+  .notes:focus-within {
+    box-shadow: var(--color-focus) 0 0 2px 2px;
+  }
+
+  .notes[aria-current] .heading {
+    background: var(--color-today-background);
+    border-color: var(--color-today-border);
+    color: var(--color-today-text);
+  }
+
+  .notes[aria-current] textarea {
+    background: var(--color-today-background);
+    color: var(--color-today-text);
+  }
+
+  .previous-day textarea {
+  }
+
+  .day {
+    grid-column: span 4;
+  }
+
+  .week {
+    grid-column: span 5;
+  }
+
+  .month {
+    grid-column: span 5;
+  }
+
+  textarea {
+    flex-grow: 1;
+    border: 0;
+    resize: none;
+    background: none;
+    font: inherit;
+    padding: .5rem;
+    line-height: 1.5em;
+
+    font-family: monospace;
+    font-size: 0.8rem;
+  }
+
+  textarea:focus {
+    outline: 0;
+  }
+
+  .links {
+
+    grid-column: span 20;
+    padding-top: 0.5rem;
+  }
+
+  .links a {
+    padding: .5rem 1rem;
+    margin: .5rem;
+    margin-left: 0;
+    border-radius: 16px;
+    background-color: #eee;
+    color: var(--color-day-text);
+    text-decoration: none;
+    transition: all 150ms ease-in-out;
+
+  }
+
+  .links a:hover {
+    background: #ddd;
+  }
+
+  </style>
+
+</head>
+<body>
+
+  <form class="plan">
+
+    <div class="links">
+      <a href="https://emarsys.slack.com/archives/G809AMH7H" target="_blank" onClick="copyClipboard()">Copy for Standup and Open Slack</a>
+    </div>
+
+    <label for="monday" class="notes day">
+      <span class="heading">Monday</span>
+      <textarea id="monday" spellcheck="false"></textarea>
+    </label>
+    <label for="tuesday" class="notes day">
+      <span class="heading">Tuesday</span>
+      <textarea id="tuesday" spellcheck="false"></textarea>
+    </label>
+    <label for="wednesday" class="notes day">
+      <span class="heading">Wednesday</span>
+      <textarea id="wednesday" spellcheck="false"></textarea>
+    </label>
+    <label for="thursday" class="notes day">
+      <span class="heading">Thursday</span>
+      <textarea id="thursday" spellcheck="false"></textarea>
+    </label>
+    <label for="friday" class="notes day">
+      <span class="heading">Friday</span>
+      <textarea id="friday" spellcheck="false"></textarea>
+    </label>
+
+    <label for="this-week" class="notes month">
+      <span class="heading">This week</span>
+      <textarea id="this-week" spellcheck="false"></textarea>
+    </label>
+    <label for="next-week" class="notes month">
+      <span class="heading">Next week</span>
+      <textarea id="next-week" spellcheck="false"></textarea>
+    </label>
+    <label for="this-cycle" class="notes month">
+      <span class="heading">This cycle</span>
+      <textarea id="this-cycle" spellcheck="false"></textarea>
+    </label>
+    <label for="current-goals" class="notes month">
+      <span class="heading">My goals</span>
+      <textarea id="current-goals" spellcheck="false"></textarea>
+    </label>
+  </form>
+
+<script>
+const days  = Array.from(document.querySelectorAll(".day"));
+const notes = Array.from(document.querySelectorAll("textarea"));
+const today = new Date();
+
+document.addEventListener("keydown", e => {
+  if (e.metaKey === true && e.key === "s") {
+    e.preventDefault();
+  }
+});
+
+// add current date
+
+if ( today.getDay() == 1 ) {
+  currentDayLabel = "Mon:";
+  previousDayLabel = "Fri:";
+  setCurrentAndPreviousDays("monday", "friday");
+}
+
+if ( today.getDay() == 2 ) {
+  currentDayLabel = "Tue:";
+  previousDayLabel = "Mon:";
+  setCurrentAndPreviousDays("tuesday", "monday");
+}
+
+if ( today.getDay() == 3 ) {
+  currentDayLabel = "Wed:";
+  previousDayLabel = "Tue:";
+  setCurrentAndPreviousDays("wednesday", "tuesday");
+}
+
+if ( today.getDay() == 4 ) {
+  currentDayLabel = "Thu:";
+  previousDayLabel = "Wed:";
+  setCurrentAndPreviousDays("thursday", "wednesday");
+}
+
+if ( today.getDay() == 5 ) {
+  currentDayLabel = "Fri:";
+  previousDayLabel = "Thu:";
+  setCurrentAndPreviousDays("friday", "thursday");
+}
+
+function setCurrentAndPreviousDays(currentDayName, previousDayName) {
+  previousDayElement = document.querySelector(".day[for='" + previousDayName + "'");
+  previousDayElement.classList.add("previous-day");
+
+  currentDayElement = document.querySelector(".day[for='" + currentDayName + "'");
+  currentDayElement.classList.add("current-day");
+  currentDayElement.setAttribute("aria-current", "date");
+
+  let span = document.createElement("span");
+  span.innerHTML = today.getDate() + "." + (today.getMonth() + 1) + ".";
+
+  currentDayElement.querySelector("textarea").setAttribute("autofocus", true);
+  currentDayElement.querySelector(".heading").append(span);
+}
+
+
+// handle note-taking
+notes.forEach(note => {
+  const id = note.id;
+
+  // get initial html
+  note.value = localStorage.getItem(id);
+
+  // save changes
+  note.addEventListener("input", e => {
+    localStorage.setItem(id, note.value);
+  });
+});
+
+// handle for copying stand-up report
+
+function copyClipboard() {
+
+  var clipboardBuffer = document.createElement("textarea");
+
+  clipboardBuffer.setAttribute("id", "clipboard-buffer");
+  clipboardBuffer.innerHTML = "";
+
+  //append to form element that you want .
+  document.body.appendChild(clipboardBuffer);
+
+
+  /* Get the text field */
+  clipboardBuffer.innerHTML =
+    previousDayLabel + "\n"
+    +
+    document.querySelector(".previous-day textarea").value
+    +
+    "\n\n"
+    +
+    currentDayLabel + "\n"
+    +
+    document.querySelector(".current-day textarea").value
+  ;
+
+  /* Select the text field */
+  clipboardBuffer.select();
+  clipboardBuffer.setSelectionRange(0, 99999); /* For mobile devices */
+
+  /* Copy the text inside the text field */
+  document.execCommand('copy');
+
+  /* Alert the copied text */
+  // alert(clipboardBuffer.value);
+
+  clipboardBuffer.remove();
+}
+</script>
+
+</body>
+</html>
